@@ -18,5 +18,5 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
 
 script:
-  - CONFIG_SDL2=true make
+  - CONFIG_SDL2=true CONFIG_HTTP=true SDL_LIBS=$(sdl2-config --static-libs) make
 
