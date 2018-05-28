@@ -11,6 +11,7 @@ addons:
   apt:
     packages:
       - libsdl2-dev
+      - mesa-utils
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
