@@ -1,22 +1,37 @@
 language: c
 
 os:
-  - linux
-  - osx
+- linux
+- osx
 
 compiler:
-  - clang
+- clang
 
 addons:
   apt:
     packages:
-      - libsdl2-dev
-      - mesa-utils
+    - libsdl2-dev
+    - mesa-utils
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install dylibbundler; fi
 
 script:
-  - CONFIG_SDL2=true CONFIG_HTTP=true SDL_LIBS=$(sdl2-config --static-libs) make
+- CONFIG_SDL2=true CONFIG_HTTP=true CONFIG_PNG=true CONFIG_JPEG=true make -j 4
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./scripts/package.sh; fi
 
+before_deploy:
+- git config --local user.name "carlossless"
+- git config --local user.email "contact@carlossless.io"
+- git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: H96nsdk5HqnlKbKKnzlpDfAvHoYJpQXDfda8jHf6KTPg/dw+1UIwhJuZUpHpalOrc46gpRtq/184Fk1KgGYi8tZeCbspuhmL5vMDu8ETrKLTv7PqJQWPyCGRX/SMSumzTnXFLSBXuHgmasO55LaA88OPPt96zuCn//0FCSGrQBkvXEc/1lPyGemIO+Zk4aTv4QjH0icafL59tK3RiTUO9m6XAIzbK+zStdHU6cACE1C1nOpQ9CYbrhraEbzQjt5Epinl/cOwOWqRaNIRlAl3CuN2A4fArNhy1vooggNnB2DMaH3CpGFfg+LNX4R3UGyP0MjT6Zb+5umqt/vH7m4KIhfIN/xBNkYDVuwNQmVpbTFZhfllTsyUsH2d07mvVjteSZgJ5CSReK5CMfaq7cY95p3Fj7krcP38EE2gDcskRyS4JapizGYX9dbK2HZJ5dndfUjQwRNvCSigaUcheMLqrpeZfYurjuhR5b4MIz3yU3leLkv/NIBjK3Vu2xz1yVDD8eHfYN8vrpqDjw10xkuoRyEv6rEWamWp96YvXEtSwdaWB2391t8G3/BqpMsNTpAspwTGUq+eSibtLGf/q1uWMqfU01AGfaTpW9AbizfKqR1lyRbvh7ZreOovei24s6eIas0+kTBvrLxRUw1rN2Qimj2m6C6KjpL44Y4eUDNI6Vg=
+  file: build/Q2Pro.dmg
+  on:
+    repo: carlossless/q2pro
+    branch: ci

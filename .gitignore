@@ -1,3 +1,5 @@
+.DS_STORE
+/build
 /.config*
 /.q2pro/
 /.q2proded/
