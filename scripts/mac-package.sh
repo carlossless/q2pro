@@ -11,7 +11,6 @@ CONTENT_DIR=${APP_DIR}/Contents
 BIN_DIR=${CONTENT_DIR}/MacOS
 RESOURCE_DIR=${CONTENT_DIR}/Resources
 LIB_DIR=${CONTENT_DIR}/Library
-DMG_IMAGE=${TARGET_DIR}/${APP_NAME}.dmg
 VOLUME_NAME=${APP_NAME}
 
 rm -rf ${BUILD_DIR}
@@ -40,4 +39,4 @@ dylibbundler -b \
     -d "${LIB_DIR}" -of -p @executable_path/Library
 
 ln -f -s /Applications ${BUILD_DIR}/Applications
-hdiutil create ${DMG_IMAGE} -srcfolder ${BUILD_DIR} -volname ${VOLUME_NAME}
+hdiutil create ${TARGET_DIR}/q2pro-mac.dmg -srcfolder ${BUILD_DIR} -volname ${VOLUME_NAME}

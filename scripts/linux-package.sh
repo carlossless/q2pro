@@ -22,5 +22,5 @@ cp -r scripts/baseq2/* ${BASEQ2_DIR}
 cp -r src/client/ui/q2pro.menu ${BASEQ2_DIR}
 
 pushd ${BUILD_DIR}
-tar -czvf ../${APP_NAME}.tar.gz .
+tar -czvf ../${APP_NAME}-linux.tar.gz .
 popd
