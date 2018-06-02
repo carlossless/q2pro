@@ -1,10 +1,9 @@
 language: c
+compiler: clang
 
 matrix:
   include:
     - os: linux
-      compiler:
-        - clang
       addons:
         apt:
           packages:
@@ -14,8 +13,6 @@ matrix:
         - CONFIG_SDL2=true CONFIG_HTTP=true CONFIG_PNG=true CONFIG_JPEG=true make -j 4
         - ./scripts/linux-package.sh
     - os: osx
-      compiler:
-        - clang
       before_install:
         - brew update
         - brew install sdl2
