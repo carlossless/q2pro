@@ -5,6 +5,7 @@ set -e
 ROOT_DIR=dist
 TARGET_DIR=${ROOT_DIR}/mac
 BUILD_DIR=${TARGET_DIR}/intermediate
+BASEQ2_DIR=${BUILD_DIR}/baseq2
 APP_NAME=Q2Pro
 APP_DIR=${BUILD_DIR}/${APP_NAME}.app
 CONTENT_DIR=${APP_DIR}/Contents
@@ -30,7 +31,7 @@ cp q2proded ${BIN_DIR}
 cp gamex86_64.so ${BIN_DIR}/baseq2
 
 cp scripts/apple/q2pro.icns ${RESOURCE_DIR}
-cp src/client/ui/q2pro.menu ${RESOURCE_DIR}/baseq2
+cp src/client/ui/q2pro.menu ${BASEQ2_DIR}
 tar zxf scripts/q2demo-baseq2.tar.gz -C ${BASEQ2_DIR}
 
 dylibbundler -b \
