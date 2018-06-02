@@ -24,7 +24,7 @@ matrix:
         - tar zxf q2pro-mgw-sdk.tar.gz
         - cp q2pro-mgw-sdk/config .config
       script:
-        - CONFIG_SDL2=true CONFIG_HTTP=true CONFIG_PNG=true CONFIG_JPEG=true make -j 4
+        - CONFIG_WINDOWS=true CONFIG_SDL2=true CONFIG_HTTP=true CONFIG_PNG=true CONFIG_JPEG=true make -j 4
     - os: osx
       before_install:
         - brew update
