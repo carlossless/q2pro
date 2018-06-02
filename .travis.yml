@@ -1,31 +1,28 @@
 language: c
 
-os:
-- linux
-- osx
-
-compiler:
-- clang
-
-addons:
-  apt:
-    packages:
-    - libsdl2-dev
-    - mesa-utils
-
-before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install dylibbundler; fi
-
-script:
-- CONFIG_SDL2=true CONFIG_HTTP=true CONFIG_PNG=true CONFIG_JPEG=true make -j 4
-- >
-  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    ./scripts/mac-package.sh
-  else
-    ./scripts/linux-package.sh
-  fi
+matrix:
+  include:
+    - os: linux
+      compiler:
+        - clang
+      addons:
+        apt:
+          packages:
+          - libsdl2-dev
+          - mesa-utils
+      script:
+        - CONFIG_SDL2=true CONFIG_HTTP=true CONFIG_PNG=true CONFIG_JPEG=true make -j 4
+        - ./scripts/linux-package.sh
+    - os: osx
+      compiler:
+        - clang
+      before_install:
+        - brew update
+        - brew install sdl2
+        - brew install dylibbundler
+      script:
+        - CONFIG_SDL2=true CONFIG_HTTP=true CONFIG_PNG=true CONFIG_JPEG=true make -j 4
+        - ./scripts/mac-package.sh
 
 deploy:
   provider: releases
