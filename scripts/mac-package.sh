@@ -2,7 +2,8 @@
 
 set -e
 
-BUILD_DIR=build
+ROOT_DIR=dist
+BUILD_DIR=${ROOT_DIR}/mac
 APP_NAME=Q2Pro
 APP_DIR=${BUILD_DIR}/${APP_NAME}.app
 CONTENT_DIR=${APP_DIR}/Contents
@@ -14,6 +15,8 @@ VOLUME_NAME=${APP_NAME}
 
 rm -rf ${BUILD_DIR}
 
+mkdir -p ${ROOT_DIR}
+mkdir -p ${BUILD_DIR}
 mkdir -p ${APP_DIR}
 mkdir -p ${CONTENT_DIR}
 mkdir -p ${BIN_DIR}
