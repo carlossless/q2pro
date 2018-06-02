@@ -24,7 +24,7 @@ matrix:
         - tar zxf q2pro-mgw-sdk.tar.gz -C ../
         - cp ../q2pro-mgw-sdk/config .config
       script:
-        - CONFIG_SDL2=true CONFIG_HTTP=true CONFIG_PNG=true CONFIG_JPEG=true make strip -j 4
+        - make strip -j 4
         - ./scripts/win-package.sh
     - os: osx
       before_install:
