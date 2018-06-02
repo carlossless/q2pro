@@ -23,7 +23,7 @@ mkdir -p ${CONTENT_DIR}
 mkdir -p ${BIN_DIR}
 mkdir -p ${RESOURCE_DIR}
 mkdir -p ${LIB_DIR}
-mkdir -p ${BIN_DIR}/baseq2
+mkdir -p ${BASEQ2_DIR}
 
 cp scripts/apple/Info.plist ${CONTENT_DIR}
 cp q2pro ${BIN_DIR}
