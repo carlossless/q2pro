@@ -34,3 +34,5 @@ deploy:
   files:
     - dist/mac/Q2Pro.dmg
     - dist/linux/q2pro.tar.gz
+  on:
+    tags: true
