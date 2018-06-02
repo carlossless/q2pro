@@ -34,5 +34,6 @@ deploy:
   files:
     - dist/mac/Q2Pro.dmg
     - dist/linux/q2pro.tar.gz
+  skip_cleanup: true
   on:
     tags: true
