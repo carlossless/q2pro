@@ -30,8 +30,8 @@ cp q2proded ${BIN_DIR}
 cp gamex86_64.so ${BIN_DIR}/baseq2
 
 cp scripts/apple/q2pro.icns ${RESOURCE_DIR}
-cp -r scripts/baseq2 ${RESOURCE_DIR}
-cp -r src/client/ui/q2pro.menu ${RESOURCE_DIR}/baseq2
+cp src/client/ui/q2pro.menu ${RESOURCE_DIR}/baseq2
+tar zxf scripts/q2demo-baseq2.tar.gz -C ${BASEQ2_DIR}
 
 dylibbundler -b \
     -x "${BIN_DIR}/q2pro" \

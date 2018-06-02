@@ -18,8 +18,8 @@ cp q2pro ${BUILD_DIR}
 cp q2proded ${BUILD_DIR}
 cp gamex86_64.so ${BASEQ2_DIR}
 
-cp -r scripts/baseq2/* ${BASEQ2_DIR}
-cp -r src/client/ui/q2pro.menu ${BASEQ2_DIR}
+cp src/client/ui/q2pro.menu ${BASEQ2_DIR}
+tar zxf scripts/q2demo-baseq2.tar.gz -C ${BASEQ2_DIR}
 
 pushd ${BUILD_DIR}
 tar -czvf ../${APP_NAME}-linux.tar.gz .
