@@ -3,7 +3,8 @@
 set -e
 
 ROOT_DIR=dist
-BUILD_DIR=${ROOT_DIR}/linux
+TARGET_DIR=${ROOT_DIR}/linux
+BUILD_DIR=${TARGET_DIR}/intermediate
 BASEQ2_DIR=${BUILD_DIR}/baseq2
 APP_NAME=q2pro
 
@@ -21,5 +22,5 @@ cp -r scripts/baseq2/* ${BASEQ2_DIR}
 cp -r src/client/ui/q2pro.menu ${BASEQ2_DIR}
 
 pushd ${BUILD_DIR}
-tar -czvf ${APP_NAME}.tar.gz .
+tar -czvf ../${APP_NAME}.tar.gz .
 popd
