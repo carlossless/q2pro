@@ -16,6 +16,8 @@ matrix:
       addons:
         apt:
           packages:
+          - libsdl2-dev
+          - mesa-utils
           - mingw-w64
       pre-install:
         - wget https://github.com/skullernet/q2pro-mgw-sdk/releases/download/2018-03-15/q2pro-mgw-sdk-20180315.tar.gz -O q2pro-mgw-sdk.tar.gz
