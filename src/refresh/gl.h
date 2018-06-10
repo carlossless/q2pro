@@ -35,7 +35,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  *
  */
 
-#ifdef GL_VERSION_ES_CM_1_0
+#if USE_GLES
 #define QGL_INDEX_TYPE  GLushort
 #define QGL_INDEX_ENUM  GL_UNSIGNED_SHORT
 #else
@@ -118,9 +118,16 @@ typedef struct {
     int             num_beams;
 } glRefdef_t;
 
-#define QGL_CAP_LEGACY      1
-#define QGL_CAP_SHADER      2
-#define QGL_CAP_ANISOTROPY  4
+enum {
+    QGL_CAP_LEGACY                      = (1 << 0),
+    QGL_CAP_SHADER                      = (1 << 1),
+    QGL_CAP_TEXTURE_BITS                = (1 << 2),
+    QGL_CAP_TEXTURE_CLAMP_TO_EDGE       = (1 << 3),
+    QGL_CAP_TEXTURE_MAX_LEVEL           = (1 << 4),
+    QGL_CAP_TEXTURE_LOD_BIAS            = (1 << 5),
+    QGL_CAP_TEXTURE_NON_POWER_OF_TWO    = (1 << 6),
+    QGL_CAP_TEXTURE_ANISOTROPY          = (1 << 7),
+};
 
 typedef struct {
     int     ver_gl;
@@ -177,7 +184,6 @@ extern cvar_t *gl_dlight_falloff;
 #endif
 extern cvar_t *gl_modulate_entities;
 extern cvar_t *gl_doublelight_entities;
-extern cvar_t *gl_fragment_program;
 extern cvar_t *gl_fontshadow;
 extern cvar_t *gl_shaders;
 

@@ -82,6 +82,7 @@ static const glsection_t sections[] = {
         .ver_es = 10,
         .excl_gl = 31,
         .excl_es = 20,
+        .caps = QGL_CAP_LEGACY,
         .functions = (const glfunction_t []) {
             QGL_FN(AlphaFunc),
             QGL_FN(Color4f),
@@ -91,7 +92,6 @@ static const glsection_t sections[] = {
             QGL_FN(LoadIdentity),
             QGL_FN(LoadMatrixf),
             QGL_FN(MatrixMode),
-            QGL_FN(PolygonMode),
             QGL_FN(Scalef),
             QGL_FN(ShadeModel),
             QGL_FN(TexCoordPointer),
@@ -110,6 +110,29 @@ static const glsection_t sections[] = {
             QGL_FN(DepthRange),
             { NULL }
         }
+    },
+
+    // GL 1.1, not ES, compat
+    {
+        .ver_gl = 11,
+        .excl_gl = 31,
+        .caps = QGL_CAP_TEXTURE_BITS,
+        .functions = (const glfunction_t []) {
+            QGL_FN(PolygonMode),
+            { NULL }
+        }
+    },
+
+    // ES 1.1
+    {
+        .ver_es = 11,
+        .caps = QGL_CAP_TEXTURE_CLAMP_TO_EDGE,
+    },
+
+    // GL 1.2
+    {
+        .ver_gl = 12,
+        .caps = QGL_CAP_TEXTURE_CLAMP_TO_EDGE | QGL_CAP_TEXTURE_MAX_LEVEL,
     },
 
     // GL 1.3
@@ -138,12 +161,19 @@ static const glsection_t sections[] = {
         }
     },
 
+    // GL 1.4, compat
+    {
+        .ver_gl = 14,
+        .excl_gl = 31,
+        .caps = QGL_CAP_TEXTURE_LOD_BIAS,
+    },
+
     // GL 1.5
     // GL_ARB_vertex_buffer_object
     {
         .extension = "GL_ARB_vertex_buffer_object",
         .ver_gl = 15,
-        .ver_es = 10,
+        .ver_es = 11,
         .functions = (const glfunction_t []) {
             QGL_FN(BindBuffer),
             QGL_FN(BufferData),
@@ -183,8 +213,9 @@ static const glsection_t sections[] = {
         }
     },
 
-    // ES 2.0
+    // GL 3.0, ES 2.0
     {
+        .ver_gl = 30,
         .ver_es = 20,
         .functions = (const glfunction_t []) {
             QGL_FN(GenerateMipmap),
@@ -192,12 +223,12 @@ static const glsection_t sections[] = {
         }
     },
 
-    // GL 3.0
+    // GL 3.0, ES 3.0
     {
         .ver_gl = 30,
         .ver_es = 30,
+        .caps = QGL_CAP_TEXTURE_MAX_LEVEL | QGL_CAP_TEXTURE_NON_POWER_OF_TWO,
         .functions = (const glfunction_t []) {
-            QGL_FN(GenerateMipmap),
             QGL_FN(GetStringi),
             { NULL }
         }
@@ -221,7 +252,7 @@ static const glsection_t sections[] = {
     // GL 4.1
     {
         .ver_gl = 41,
-        .ver_es = 20,
+        .ver_es = 10,
         .functions = (const glfunction_t []) {
             QGL_FN(ClearDepthf),
             QGL_FN(DepthRangef),
@@ -234,7 +265,7 @@ static const glsection_t sections[] = {
     {
         .extension = "GL_EXT_texture_filter_anisotropic",
         .ver_gl = 46,
-        .caps = QGL_CAP_ANISOTROPY
+        .caps = QGL_CAP_TEXTURE_ANISOTROPY
     },
 
     // GL_ARB_fragment_program
@@ -326,12 +357,29 @@ static qboolean parse_glsl_version(void)
     return qtrue;
 }
 
+static qboolean extension_blacklisted(const char *search)
+{
+    cvar_t *var = Cvar_FindVar(search);
+
+    if (!var) {
+        char buffer[MAX_QPATH];
+        Q_strlcpy(buffer, search, sizeof(buffer));
+        Q_strlwr(buffer);
+        var = Cvar_FindVar(buffer);
+    }
+
+    return var && !var->integer;
+}
+
 static qboolean extension_present(const char *search)
 {
     const char *s, *p;
     size_t len;
 
     if (!search || !*search)
+        return qfalse;
+
+    if (extension_blacklisted(search))
         return qfalse;
 
     if (gl_config.ver_gl >= 30 || gl_config.ver_es >= 30) {
@@ -465,20 +513,21 @@ qboolean QGL_Init(void)
     }
 
     if (gl_config.ver_es) {
-        if (!(gl_config.caps & QGL_CAP_SHADER)) {
-            Com_EPrintf("OpenGL ES version 3.0 or higher required\n");
+        if (gl_config.ver_es < 30 || gl_config.ver_sl < 300)
+            gl_config.caps &= ~QGL_CAP_SHADER;
+
+        if (!(gl_config.caps & (QGL_CAP_LEGACY | QGL_CAP_SHADER))) {
+            Com_EPrintf("Unsupported OpenGL ES version\n");
             return qfalse;
         }
     } else {
-        if (gl_config.ver_gl >= 31 && !arb_compat) {
-            Com_EPrintf("OpenGL compatibility extension required\n");
-            return qfalse;
-        }
-
-        if (gl_config.ver_gl < 20 || gl_config.ver_sl < 130)
+        if (gl_config.ver_gl < 30 || gl_config.ver_sl < 130)
             gl_config.caps &= ~QGL_CAP_SHADER;
 
-        gl_config.caps |= QGL_CAP_LEGACY;
+        if (!(gl_config.caps & QGL_CAP_LEGACY)) {
+            Com_EPrintf("Unsupported OpenGL version/profile\n");
+            return qfalse;
+        }
     }
 
     return qtrue;
